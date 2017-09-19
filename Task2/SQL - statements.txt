@@ -1,0 +1,30 @@
+[1]:
+SELECT orgname, 
+COUNT(price) numOfRequests,
+COUNT(case when result='YES' then id_req  end) numSuccessReq,
+COUNT(case when result='NO' then id_req  end) numFailureReq,
+SUM(case when result='YES' then price else 0 end) gainSum 
+FROM partners, clientpartner, requests, clients 
+WHERE 
+requests.id_cl_part=clientpartner.id_cl_part 
+AND clientpartner.id_partner=partners.id_partner AND
+clients.id_client=clientpartner.id_client
+GROUP BY orgname;
+
+
+
+
+
+[2]:
+SELECT 
+id_req,
+orgname, 
+status,
+result,
+CASE WHEN result='NO' AND status='SUCCESS' THEN failure_cause ELSE 'NONE' END failureCause
+FROM partners, clientpartner, requests, clients 
+WHERE 
+requests.id_cl_part=clientpartner.id_cl_part 
+AND clientpartner.id_partner=partners.id_partner AND
+clients.id_client=clientpartner.id_client
+AND orgname='ozon.ru';
